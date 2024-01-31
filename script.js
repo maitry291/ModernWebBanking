@@ -7,6 +7,8 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollto = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -30,9 +32,11 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+/*
 console.log(document.documentElement); //<html/>
 console.log(document.head); //<head/>
 console.log(document.body); //<body/>
+*/
 
 const allButtons = document.getElementsByTagName('button');
 console.log(allButtons); //datatype - HTMLCollection which dynamically changes when any button element is added or removed
@@ -69,11 +73,41 @@ cookie.style.width = '120%';
 
 //to get all css properties of element
 // console.log(getComputedStyle(cookie));
-const newHeight=Number.parseFloat(getComputedStyle(cookie).height,10)+30;
+const newHeight = Number.parseFloat(getComputedStyle(cookie).height, 10) + 30;
 cookie.style.height = newHeight + 'px';
 
+//smooth scroll feature
+btnScrollto.addEventListener('click', function () {
+  section1.scrollIntoView({ behavior: 'smooth' });
+  console.log(section1);
+});
 
+//smooth navigation scroll to sections -Page navigation
+const navSections = document.querySelectorAll('.nav__link');
 
+//old method
+/*
+navSections.forEach(el => {
+  el.addEventListener('click', function (e) {
+    // el.sc
+    e.preventDefault();
+    const id = el.getAttribute('href'); //id of section
+    const scrollToSection = document.querySelector(id);
+    scrollToSection.scrollIntoView({ behavior: 'smooth' });
+    // console.log(scrollToSection, id);
+  });
+});
+*/
 
-
-
+//through event delegation- we apply this to the parent element as we know that event bubbles up to the parent from target.
+//here parent is ul--nav__links
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  //check if the clicked element/target element is what we want
+  if (e.target.classList.contains('nav__link')) {
+    //apply smooth scrolling to the target element
+    document
+      .querySelector(e.target.getAttribute('href'))
+      .scrollIntoView({ behavior: 'smooth' });
+  }
+});
