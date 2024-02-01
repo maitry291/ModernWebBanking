@@ -111,3 +111,37 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
       .scrollIntoView({ behavior: 'smooth' });
   }
 });
+
+const tabOperations = document.querySelectorAll('.operations__tab');
+const tabContent = document.querySelectorAll('.operations__content');
+const tabContainer = document.querySelector('.operations__tab-container');
+
+//bad practice as it can slow down the website when we have more num of tabs ex if we have 200 tabs then 200 event handler functions copies will be generated
+// tabOperations.forEach(tab => {
+//   tab.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     //add active class on tab and change the content
+//     tab.classList.add('operations__tab--active');
+
+//   });
+// });
+
+//instead we use event delegation
+
+tabContainer.addEventListener('click', function (e) {
+  const clickedTab = e.target.closest('.operations__tab');
+  if (!clickedTab) return;
+  tabOperations.forEach(tab => tab.classList.remove('operations__tab--active'));
+  clickedTab.classList.add('operations__tab--active');
+
+  const contentNum = clickedTab.getAttribute('data-tab');
+  const currContent = '.operations__content--' + contentNum;
+  //remove active from all
+  document
+    .querySelectorAll('.operations__content')
+    .forEach(e => e.classList.remove('operations__content--active'));
+  //show content
+  document
+    .querySelector(currContent)
+    .classList.add('operations__content--active');
+});
