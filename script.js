@@ -166,13 +166,13 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 //sticky navigation
 const navHeight = nav.getBoundingClientRect().height;
 const obsOptns = {
-  root: null,
+  root: null, //root is viewport
   threshold: 0, //callback func will be triggered when when whole header is not visible
   rootMargin: `-${navHeight}px`,
 };
 const obsCallback = function (entries, observer) {
   entries.forEach(entry => {
-    console.log(entry);
+    // console.log(entry);
     if (!entry.isIntersecting) {
       nav.classList.add('sticky');
     } else {
@@ -182,3 +182,21 @@ const obsCallback = function (entries, observer) {
 };
 const observer = new IntersectionObserver(obsCallback, obsOptns);
 observer.observe(header);
+
+//revealing elements on scroll
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.2,
+});
+
+allSections.forEach(section => {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
